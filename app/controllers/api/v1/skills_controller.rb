@@ -15,7 +15,7 @@ module Api
         if @skill.save
           render :show, status: :created
         else
-          render "api/v1/errors", locals: { errors: @skill.errors }, status: :unprocessable_entity
+          render_unprocessable_entity(@skill.errors)
         end
       end
 
@@ -24,7 +24,7 @@ module Api
         if @skill.update(skill_params)
           render :show, status: :ok
         else
-          render "api/v1/errors", locals: { errors: @skill.errors }, status: :unprocessable_entity
+          render_unprocessable_entity(@skill.errors)
         end
       end
 
@@ -34,7 +34,7 @@ module Api
         if @skill.destroy
           head :no_content
         else
-          render "api/v1/errors", locals: { errors: @skill.errors }, status: :unprocessable_entity
+          render_unprocessable_entity(@skill.errors)
         end
       end
 

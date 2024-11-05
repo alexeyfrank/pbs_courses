@@ -3,11 +3,15 @@ module Ba
     include ActiveModel::Validations
 
     attr_accessor :attributes
-    def initialize(attributes = {})
+
+    def call(attributes = {})
       @attributes = attributes.to_hash.with_indifferent_access
+      perform
     end
 
-    def call
+    private
+
+    def perform
       raise NotImplementedError, "Subclasses must implement the call method"
     end
   end

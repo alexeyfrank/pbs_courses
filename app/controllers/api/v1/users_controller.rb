@@ -15,7 +15,7 @@ module Api
         if @user.save
           render :show, status: :created
         else
-          render "api/v1/errors", locals: { errors: @user.errors }, status: :unprocessable_entity
+          render_unprocessable_entity(@user.errors)
         end
       end
 
@@ -24,7 +24,7 @@ module Api
         if @user.update(user_params)
           render :show, status: :ok
         else
-          render "api/v1/errors", locals: { errors: @user.errors }, status: :unprocessable_entity
+          render_unprocessable_entity(@user.errors)
         end
       end
 
@@ -34,7 +34,7 @@ module Api
         if @user.destroy
           head :no_content
         else
-          render "api/v1/errors", locals: { errors: @user.errors }, status: :unprocessable_entity
+          render_unprocessable_entity(@user.errors)
         end
       end
 

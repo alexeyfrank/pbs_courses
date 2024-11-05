@@ -87,7 +87,8 @@ RSpec.describe 'api/v1/courses', type: :request do
             type: :array,
             items: { type: :string }
           }
-        }
+        },
+        required: %w[title description]
       }
 
       let(:id) { create(:course).id }
@@ -100,6 +101,7 @@ RSpec.describe 'api/v1/courses', type: :request do
 
       response(200, 'ok') do
         schema '$ref' => '#/components/schemas/Course'
+
         run_test!
       end
 
@@ -110,7 +112,7 @@ RSpec.describe 'api/v1/courses', type: :request do
 
       response(422, 'unprocessable entity') do
         schema '$ref' => '#/components/schemas/Errors'
-        let(:course) { { title: '', description: '' } }
+        let(:course) { { title: '', description: nil } }
         run_test!
       end
     end
@@ -126,6 +128,38 @@ RSpec.describe 'api/v1/courses', type: :request do
 
       response(404, 'not found') do
         let(:id) { '123' }
+        run_test!
+      end
+    end
+  end
+
+  path '/api/v1/courses/{id}/remove_author' do
+    parameter name: 'id', in: :path, type: :string, description: 'id'
+
+    delete('remove author') do
+      consumes 'application/json'
+      produces 'application/json'
+
+
+      response(200, 'ok') do
+        schema '$ref' => '#/components/schemas/Course'
+        let(:id) { create(:course).id }
+
+        before do
+          create(:user)
+        end
+
+        run_test!
+      end
+
+      response(404, 'not found') do
+        let(:id) { '123' }
+        run_test!
+      end
+
+      response(422, 'unprocessable entity') do
+        schema '$ref' => '#/components/schemas/Errors'
+        let(:id) { create(:course).id }
         run_test!
       end
     end

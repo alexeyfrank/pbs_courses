@@ -6,7 +6,11 @@ module Ba
       private
 
       def find_skills
-        Skill.where(slug: attributes[:skill_slugs]) if attributes[:skill_slugs]
+        if attributes[:skill_slugs]
+          Skill.where(slug: attributes[:skill_slugs])
+        else
+          []
+        end
       end
 
       def find_author
@@ -15,10 +19,10 @@ module Ba
         end
 
         if attributes[:skill_slugs]
-          AuthorFinderService.new.find_author_by_course_skills(attributes[:skill_slugs])
-        else
-          nil
+          AuthorService.new.find_author_by_course_skills(attributes[:skill_slugs])
         end
+
+        course.author
       end
     end
   end

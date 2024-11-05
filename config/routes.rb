@@ -7,7 +7,11 @@ Rails.application.routes.draw do
     namespace :v1 do
       resources :users, only: %i[index show create update destroy]
       resources :skills, only: %i[index show create update destroy]
-      resources :courses, only: %i[index show create update destroy]
+      resources :courses, only: %i[index show create update destroy] do
+        member do
+          delete :remove_author
+        end
+      end
     end
   end
 

@@ -1,7 +1,4 @@
-class AuthorFinderService
-  def initialize
-  end
-
+class AuthorService
   # This method finds the most suitable author for a course based on their expertise with the given skills
   # It ranks authors by how many of the requested skills they have taught in their courses
   # The raw SQL generated is equivalent to:
@@ -29,14 +26,20 @@ class AuthorFinderService
   # 7. Returns the single best match
   def find_author_by_course_skills(skill_slugs = [], exclude_ids = [])
     if skill_slugs.empty?
-      return User.order("courses_count ASC").first
+      return User.where.not(id: exclude_ids).order(courses_count: :asc).first
     end
 
-    User.joins(courses: :skills)
+    user = User.joins(courses: :skills)
       .where(skills: { slug: skill_slugs })
       .where.not(id: exclude_ids)
       .group("users.id")
-      .order("COUNT(DISTINCT skills.id) DESC, courses_count ASC")
+      .order(Arel.sql("COUNT(DISTINCT skills.id) DESC, users.courses_count ASC"))
       .first
+
+    if user.nil?
+      return User.where.not(id: exclude_ids).order(courses_count: :asc).first
+    end
+
+    user
   end
 end

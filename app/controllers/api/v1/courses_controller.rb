@@ -10,22 +10,22 @@ module Api
       end
 
       def create
-        @course = Ba::Courses::Create.new(course_params).call
+        @course = Ba::Courses::Create.new.call(create_course_params)
 
-        if @course.persisted?
-          render :show, status: :created
+        if @course.errors.any?
+          render_unprocessable_entity(@course.errors)
         else
-          render "api/v1/errors", locals: { errors: @course.errors }, status: :unprocessable_entity
+          render :show, status: :created
         end
       end
 
       def update
-        @course = Ba::Courses::Update.new(course_params).call
+        @course = Ba::Courses::Update.new(id: params[:id]).call(update_course_params)
 
-        if @course.persisted?
-          render :show, status: :ok
+        if @course.errors.any?
+          render_unprocessable_entity(@course.errors)
         else
-          render "api/v1/errors", locals: { errors: @course.errors }, status: :unprocessable_entity
+          render :show, status: :ok
         end
       end
 
@@ -35,14 +35,28 @@ module Api
         if @course.destroy
           head :no_content
         else
-          render "api/v1/errors", locals: { errors: @course.errors }, status: :unprocessable_entity
+          render_unprocessable_entity(@course.errors)
+        end
+      end
+
+      def remove_author
+        @course = Ba::Courses::RemoveAuthor.new(id: params[:id]).call
+
+        if @course.errors.any?
+          render_unprocessable_entity(@course.errors)
+        else
+          render :show, status: :ok
         end
       end
 
       private
 
-      def course_params
+      def create_course_params
         params.require(:course).permit(:title, :description, :author_id, skill_slugs: [])
+      end
+
+      def update_course_params
+        params.require(:course).permit(:id, :title, :description, skill_slugs: [])
       end
     end
   end

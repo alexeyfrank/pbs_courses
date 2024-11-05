@@ -1,6 +1,6 @@
 module Ba
   module Courses
-    class Update < Base
+    class RemoveAuthor < Base
       attr_accessor :course
 
       def initialize(id:)
@@ -10,9 +10,10 @@ module Ba
       private
 
       def perform
-        course.assign_attributes(attributes.except(:id))
-        course.skills = find_skills
-        course.author = find_author
+        old_author = course.author
+        course.author = AuthorService.new \
+          .find_author_by_course_skills(course.skills.pluck(:slug), [ old_author.id ])
+
         course.save
 
         course

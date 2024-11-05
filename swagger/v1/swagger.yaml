@@ -96,12 +96,13 @@ paths:
                   type: string
                 description:
                   type: string
-                author_id:
-                  type: integer
                 skill_slugs:
                   type: array
                   items:
                     type: string
+              required:
+              - title
+              - description
     delete:
       summary: delete course
       responses:
@@ -109,6 +110,31 @@ paths:
           description: no content
         '404':
           description: not found
+  "/api/v1/courses/{id}/remove_author":
+    parameters:
+    - name: id
+      in: path
+      description: id
+      required: true
+      schema:
+        type: string
+    delete:
+      summary: remove author
+      responses:
+        '200':
+          description: ok
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Course"
+        '404':
+          description: not found
+        '422':
+          description: unprocessable entity
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Errors"
   "/api/v1/skills":
     get:
       summary: list skills
