@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:17
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: pbs_courses_development
+      POSTGRES_USER: pbs_courses
+      POSTGRES_PASSWORD: pbs_courses
+    ports:
+      - "0.0.0.0:5432:5432"
+
+volumes:
+  postgres_data:
