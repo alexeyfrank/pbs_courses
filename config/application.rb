@@ -23,5 +23,16 @@ module PbsCourses
     #
     # config.time_zone = "Central Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")
+
+    config.generators do |generate|
+      generate.test_framework :rspec,
+        fixtures: true,
+        view_specs: false,
+        helper_specs: true,
+        routing_specs: true,
+        controller_specs: true,
+        request_specs: true
+      generate.fixture_replacement :factory_bot, dir: "spec/factories"
+    end
   end
 end
