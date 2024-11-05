@@ -24,14 +24,55 @@ RSpec.configure do |config|
       paths: {},
       servers: [
         {
-          url: 'https://{defaultHost}',
+          url: 'http://{defaultHost}',
           variables: {
             defaultHost: {
-              default: 'www.example.com'
+              default: 'localhost:3000'
             }
           }
         }
-      ]
+      ],
+      components: {
+        schemas: {
+          UserListResponse: {
+            type: :object,
+            properties: {
+              users: { type: :array, items: { '$ref' => '#/components/schemas/User' } },
+              meta: { '$ref' => '#/components/schemas/ListMeta' }
+            }
+          },
+          ListMeta: {
+            type: :object,
+            properties: {
+              total_count: { type: :integer }
+            }
+          },
+          User: {
+            type: :object,
+            properties: {
+              email: { type: :string },
+              full_name: { type: :string },
+              created_at: { type: :string, format: :'date-time' },
+              updated_at: { type: :string, format: :'date-time' }
+            }
+          },
+          Errors: {
+            type: :object,
+            properties: {
+              errors: {
+                type: :array,
+                items: {
+                  type: :object,
+                  properties: {
+                    attribute: { type: :string },
+                    messages: { type: :array, items: { type: :string } }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
   }
 
@@ -40,4 +81,16 @@ RSpec.configure do |config|
   # the key, this may want to be changed to avoid putting yaml in json files.
   # Defaults to json. Accepts ':json' and ':yaml'.
   config.openapi_format = :yaml
+
+  config.after(:each, operation: true, use_as_request_example: true) do |spec|
+    spec.metadata[:operation][:request_examples] ||= []
+
+    example = {
+      value: JSON.parse(request.body.string, symbolize_names: true),
+      name: 'request_example_1',
+      summary: 'A request example'
+    }
+
+    spec.metadata[:operation][:request_examples] << example
+  end
 end

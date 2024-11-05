@@ -15,7 +15,7 @@ module Api
         if @user.save
           render :show, status: :created
         else
-          render json: @user.errors, status: :unprocessable_entity
+          render "api/v1/errors", locals: { errors: @user.errors }, status: :unprocessable_entity
         end
       end
 
@@ -24,17 +24,24 @@ module Api
         if @user.update(user_params)
           render :show, status: :ok
         else
-          render json: @user.errors, status: :unprocessable_entity
+          render "api/v1/errors", locals: { errors: @user.errors }, status: :unprocessable_entity
         end
       end
 
       def destroy
         @user = User.find(params[:id])
+
         if @user.destroy
           head :no_content
         else
-          render json: @user.errors, status: :unprocessable_entity
+          render "api/v1/errors", locals: { errors: @user.errors }, status: :unprocessable_entity
         end
+      end
+
+      private
+
+      def user_params
+        params.require(:user).permit(:email, :full_name)
       end
     end
   end
