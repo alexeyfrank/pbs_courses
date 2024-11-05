@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :skill do
-    slug { "MyString" }
-    title { "MyString" }
+    slug { FFaker::Lorem.word }
+    name { FFaker::Lorem.word }
   end
 end

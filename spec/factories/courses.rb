@@ -1,7 +1,7 @@
 FactoryBot.define do
   factory :course do
-    author { nil }
-    title { "MyText" }
-    description { "MyText" }
+    author
+    title { FFaker::Lorem.word }
+    description { FFaker::Lorem.sentence }
   end
 end

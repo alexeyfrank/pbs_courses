@@ -70,6 +70,23 @@ RSpec.configure do |config|
                 }
               }
             }
+          },
+          SkillListResponse: {
+            type: :object,
+            properties: {
+              skills: { type: :array, items: { '$ref' => '#/components/schemas/Skill' } },
+              meta: { '$ref' => '#/components/schemas/ListMeta' }
+            }
+          },
+          Skill: {
+            type: :object,
+            properties: {
+              id: { type: :integer },
+              name: { type: :string },
+              slug: { type: :string },
+              created_at: { type: :string, format: :'date-time' },
+              updated_at: { type: :string, format: :'date-time' }
+            }
           }
         }
       }
