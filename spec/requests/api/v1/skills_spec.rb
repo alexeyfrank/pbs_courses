@@ -108,4 +108,4 @@ RSpec.describe 'api/v1/skills', type: :request do
       end
     end
   end
-end 
+end

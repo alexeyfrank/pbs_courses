@@ -87,6 +87,28 @@ RSpec.configure do |config|
               created_at: { type: :string, format: :'date-time' },
               updated_at: { type: :string, format: :'date-time' }
             }
+          },
+          CourseListResponse: {
+            type: :object,
+            properties: {
+              courses: { type: :array, items: { '$ref' => '#/components/schemas/Course' } },
+              meta: { '$ref' => '#/components/schemas/ListMeta' }
+            }
+          },
+          Course: {
+            type: :object,
+            properties: {
+              id: { type: :integer },
+              title: { type: :string },
+              description: { type: :string },
+              author: { '$ref' => '#/components/schemas/User' },
+              skills: {
+                type: :array,
+                items: { '$ref' => '#/components/schemas/Skill' }
+              },
+              created_at: { type: :string, format: :'date-time' },
+              updated_at: { type: :string, format: :'date-time' }
+            }
           }
         }
       }

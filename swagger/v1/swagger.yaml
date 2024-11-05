@@ -4,6 +4,207 @@ info:
   title: API V1
   version: v1
 paths:
+  "/api/v1/courses":
+    get:
+      summary: list courses
+      responses:
+        '200':
+          description: successful
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/CourseListResponse"
+    post:
+      summary: create course
+      parameters: []
+      responses:
+        '201':
+          description: created
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Course"
+        '422':
+          description: unprocessable entity
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Errors"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                description:
+                  type: string
+                author_id:
+                  type: integer
+                skill_slugs:
+                  type: array
+                  items:
+                    type: string
+              required:
+              - title
+              - description
+  "/api/v1/courses/{id}":
+    parameters:
+    - name: id
+      in: path
+      description: id
+      required: true
+      schema:
+        type: string
+    get:
+      summary: show course
+      responses:
+        '200':
+          description: successful
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Course"
+        '404':
+          description: not found
+    put:
+      summary: update course
+      parameters: []
+      responses:
+        '200':
+          description: ok
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Course"
+        '404':
+          description: not found
+        '422':
+          description: unprocessable entity
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Errors"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                description:
+                  type: string
+                author_id:
+                  type: integer
+                skill_slugs:
+                  type: array
+                  items:
+                    type: string
+    delete:
+      summary: delete course
+      responses:
+        '204':
+          description: no content
+        '404':
+          description: not found
+  "/api/v1/skills":
+    get:
+      summary: list skills
+      responses:
+        '200':
+          description: successful
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/SkillListResponse"
+    post:
+      summary: create skill
+      parameters: []
+      responses:
+        '201':
+          description: created
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Skill"
+        '422':
+          description: unprocessable entity
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Errors"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                slug:
+                  type: string
+              required:
+              - name
+              - slug
+  "/api/v1/skills/{id}":
+    parameters:
+    - name: id
+      in: path
+      description: id
+      required: true
+      schema:
+        type: string
+    get:
+      summary: show skill
+      responses:
+        '200':
+          description: successful
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Skill"
+        '404':
+          description: not found
+    put:
+      summary: update skill
+      parameters: []
+      responses:
+        '200':
+          description: ok
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Skill"
+        '404':
+          description: not found
+        '422':
+          description: unprocessable entity
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Errors"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                slug:
+                  type: string
+              required:
+              - name
+              - slug
+    delete:
+      summary: delete skill
+      responses:
+        '204':
+          description: no content
+        '404':
+          description: not found
   "/api/v1/users":
     get:
       summary: list users
@@ -144,3 +345,57 @@ components:
                 type: array
                 items:
                   type: string
+    SkillListResponse:
+      type: object
+      properties:
+        skills:
+          type: array
+          items:
+            "$ref": "#/components/schemas/Skill"
+        meta:
+          "$ref": "#/components/schemas/ListMeta"
+    Skill:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        slug:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+    CourseListResponse:
+      type: object
+      properties:
+        courses:
+          type: array
+          items:
+            "$ref": "#/components/schemas/Course"
+        meta:
+          "$ref": "#/components/schemas/ListMeta"
+    Course:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        description:
+          type: string
+        author:
+          "$ref": "#/components/schemas/User"
+        skills:
+          type: array
+          items:
+            "$ref": "#/components/schemas/Skill"
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time

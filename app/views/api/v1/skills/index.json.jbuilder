@@ -6,4 +6,4 @@ json.skills do
   json.array! @skills do |skill|
     json.partial! "api/v1/skills/skill", skill: skill
   end
-end 
+end
