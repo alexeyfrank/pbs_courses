@@ -1,7 +1,5 @@
 module Ba
   class BaseAction
-    include ActiveModel::Validations
-
     attr_accessor :attributes
 
     def call(attributes = {})
